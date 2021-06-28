@@ -1,10 +1,18 @@
 # EPI 536 Assignments
-A place for me to upload my EPI 536 assignments
+A place for me to upload my EPI 536 exercises
 
 ## Assignments
 
  * [E2](https://matthew-hoctor.github.io/EPI536-Assignments/E2.html)
  * [E3](https://matthew-hoctor.github.io/EPI536-Assignments/E3.html)
+ * [E4]()
+ * [E5]()
+ * [E6]()
+ * [E7]()
+ * [E8]()
+ * [E9]()
+ * [E10]()
+ * [E11]()
 
 ## Methods
 
