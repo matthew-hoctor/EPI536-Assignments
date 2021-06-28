@@ -1,0 +1,79 @@
+---
+title: "Homework EPI536-Assignments - EPI 523"
+author: "Matthew Hoctor"
+date: "6/25/2021"
+output:
+  html_document:
+    number_sections: no
+    theme: lumen
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(engine.path = list(
+  stata = "C:/Program Files/Stata17/StataBE-64"
+))
+#library(dplyr)
+#library(readxl)
+#library(tidyverse)
+#library(ggplot2)
+#library(CarletonStats)
+#library(pwr)
+#library(BSDA)
+#library(exact2x2)
+#library(car)
+#library(dvmisc)
+#library(emmeans)
+#library(gridExtra)
+#library(DescTools)
+#library(epitools)
+#library(pROC)
+#library(rje)
+#library(lmtest)
+#library(gtsummary)
+#library(mfp)
+#library(linearspline)
+library(Statamarkdown)
+```
+
+# 1: Income as a percent of the Federal Poverty Level
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+su indfmpir
+tabstat indfmpir,stat(count mean sd min p25 p75 max)
+su indfmpir if indfmpir<=2
+```
+
+# 2: Food Insecurity
+
+## a: full sample
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+su fsdch
+tabstat fsdch,stat(count mean sd min p25 p75 max)
+ta fsdch
+```
+
+## b: 4-17 years
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+ta fsdch if ridageyr>=4 & ridageyr<=17, m
+ta fsdch if ridageyr>=4 & ridageyr<=17
+```
+
+# 3: Food Assistance
+
+## c: dbq421 frequencies
+
+## d: dbq421 missing
