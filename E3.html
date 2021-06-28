@@ -339,9 +339,39 @@ ta fsdch if ridageyr&gt;=4 &amp; ridageyr&lt;=17</code></pre>
 <h1>3: Food Assistance</h1>
 <div id="c-dbq421-frequencies" class="section level2">
 <h2>c: dbq421 frequencies</h2>
+<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+ta dbq421, m
+clear</code></pre>
+<pre><code>     School |
+  breakfast |
+free/reduce |
+     d/full |
+      price |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        824        8.12        8.12
+          2 |         96        0.95        9.06
+          3 |        147        1.45       10.51
+          . |      9,082       89.49      100.00
+------------+-----------------------------------
+      Total |     10,149      100.00</code></pre>
 </div>
-<div id="d-dbq421-missing" class="section level2">
-<h2>d: dbq421 missing</h2>
+<div id="d-dbq421-among-4-17-year-olds" class="section level2">
+<h2>d: dbq421 among 4-17 year-olds</h2>
+<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+ta dbq421 if ridageyr&gt;=4 &amp; ridageyr&lt;=17, m
+clear</code></pre>
+<pre><code>     School |
+  breakfast |
+free/reduce |
+     d/full |
+      price |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        807       30.78       30.78
+          2 |         91        3.47       34.25
+          3 |        142        5.42       39.66
+          . |      1,582       60.34      100.00
+------------+-----------------------------------
+      Total |      2,622      100.00</code></pre>
 </div>
 </div>
 

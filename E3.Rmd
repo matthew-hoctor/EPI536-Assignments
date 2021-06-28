@@ -76,4 +76,16 @@ ta fsdch if ridageyr>=4 & ridageyr<=17
 
 ## c: dbq421 frequencies
 
-## d: dbq421 missing
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+ta dbq421, m
+clear
+```
+
+## d: dbq421 among 4-17 year-olds
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+ta dbq421 if ridageyr>=4 & ridageyr<=17, m
+clear
+```
