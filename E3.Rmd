@@ -1,5 +1,5 @@
 ---
-title: "Homework EPI536-Assignments - EPI 523"
+title: "Exercise 3 - EPI536-Assignments"
 author: "Matthew Hoctor"
 date: "6/25/2021"
 output:
