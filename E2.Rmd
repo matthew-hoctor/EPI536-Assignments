@@ -52,7 +52,7 @@ The following STATA chunk imports and describes the sociodemographic NHANES data
 
 ```{stata}
 import sasxport5 "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\DEMO_E.XPT"
-save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DEMO_E.dta"
+save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DEMO_E.dta",replace
 de
 clear
 ```
@@ -65,7 +65,7 @@ The following STATA chunk imports and describes the body measures NHANES dataset
 
 ```{stata}
 import sasxport5 "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\BMX_E.XPT"
-save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_BMX_E.dta"
+save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_BMX_E.dta",replace
 de
 clear
 ```
@@ -86,8 +86,8 @@ clear
 
 ```{stata}
 import sasxport5 "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\DBQ_E.XPT"
-keep seqn dbd381 dbd411
-save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DBQ_E.dta"
+keep seqn dbd381 dbd411 dbq421
+save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DBQ_E.dta",replace
 de
 clear
 ```
@@ -97,7 +97,7 @@ clear
 ```{stata}
 import sasxport5 "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\HIQ_E.XPT"
 keep seqn hiq011 hiq031a  hiq031b hiq031c hiq031d hiq031e hiq031f hiq031g hiq031h hiq031i hiq031j hiq031aa
-save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_HIQ_E.dta"
+save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_HIQ_E.dta",replace
 de
 clear
 ```
@@ -110,7 +110,7 @@ The following STATA chunk imports and describes the Food Security NHANES dataset
 
 ```{stata}
 import sasxport5 "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\FSQ_E.XPT"
-#save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_FSQ_E.dta"
+#save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_FSQ_E.dta",replace
 de
 clear
 ```

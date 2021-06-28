@@ -254,15 +254,75 @@ div.tocify {
 <h1>2 Import Sociodemographic XPT</h1>
 <p>The following STATA chunk imports and describes the sociodemographic NHANES dataset:</p>
 <pre class="stata"><code>import sasxport5 &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\DEMO_E.XPT&quot;
-save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DEMO_E.dta&quot;
+save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DEMO_E.dta&quot;,replace
 de
 clear</code></pre>
-<pre><code>file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DEMO_E.dta
-    already exists
-r(602);
+<pre><code>file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DEMO_E.dta saved
 
-end of do-file
-r(602);</code></pre>
+
+Contains data from C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DEMO_
+&gt; E.dta
+ Observations:        10,149                  
+    Variables:            43                  28 Jun 2021 15:43
+-------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+-------------------------------------------------------------------------------
+seqn            double  %10.0g                Respondent sequence number
+sddsrvyr        double  %10.0g                Data Release Number
+ridstatr        double  %10.0g                Interview/Examination Status
+ridexmon        double  %10.0g                Six month time period
+riagendr        double  %10.0g                Gender
+ridageyr        double  %10.0g                Age at Screening Adjudicated -
+                                                Recode
+ridagemn        double  %10.0g                Age in Months at Screening -
+                                                Recode
+ridageex        double  %10.0g                Age in Months at Exam - Recode
+ridreth1        double  %10.0g                Race/Ethnicity - Recode
+dmqmilit        double  %10.0g                Served in the US Armed Forces
+dmdborn2        double  %10.0g                Country of Birth - Recode
+dmdcitzn        double  %10.0g                Citizenship Status
+dmdyrsus        double  %10.0g                Length of time in US
+dmdeduc3        double  %10.0g                Education Level - Children/Youth
+                                                6-19
+dmdeduc2        double  %10.0g                Education Level - Adults 20+
+dmdschol        double  %10.0g                Now attending school?
+dmdmartl        double  %10.0g                Marital Status
+dmdhhsiz        double  %10.0g                Total number of people in the
+                                                Household
+dmdfmsiz        double  %10.0g                Total number of people in the
+                                                Family
+indhhin2        double  %10.0g                Annual Household Income
+indfmin2        double  %10.0g                Annual Family Income
+indfmpir        double  %10.0g                Ratio of family income to poverty
+ridexprg        double  %10.0g                Pregnancy Status at Exam - Recode
+dmdhrgnd        double  %10.0g                HH Ref Person Gender
+dmdhrage        double  %10.0g                HH Ref Person Age
+dmdhrbr2        double  %10.0g                HH Ref Person Country of Birth
+dmdhredu        double  %10.0g                HH Ref Person Education Level
+dmdhrmar        double  %10.0g                HH Ref Person Marital Status
+dmdhsedu        double  %10.0g                HH Ref Person&#39;s Spouse Education
+                                                Level
+sialang         double  %10.0g                Language of SP Interview
+siaproxy        double  %10.0g                Proxy used in SP Interview?
+siaintrp        double  %10.0g                Interpreter used in SP Interview?
+fialang         double  %10.0g                Language of Family Interview
+fiaproxy        double  %10.0g                Proxy used in Family Interview?
+fiaintrp        double  %10.0g                Interpreter used in Family
+                                                Interview?
+mialang         double  %10.0g                Language of MEC Interview
+miaproxy        double  %10.0g                Proxy used in MEC Interview?
+miaintrp        double  %10.0g                Interpreter used in MEC
+                                                Interview?
+aialang         double  %10.0g                Language of ACASI Interview
+wtint2yr        double  %10.0g                Full Sample 2 Year Interview
+                                                Weight
+wtmec2yr        double  %10.0g                Full Sample 2 Year MEC Exam
+                                                Weight
+sdmvpsu         double  %10.0g                Masked Variance Pseudo-PSU
+sdmvstra        double  %10.0g                Masked Variance Pseudo-Stratum
+-------------------------------------------------------------------------------
+Sorted by: </code></pre>
 </div>
 <div id="import-body-measures-xpt" class="section level1">
 <h1>3 Import Body Measures XPT</h1>
@@ -270,15 +330,46 @@ r(602);</code></pre>
 <h2>a</h2>
 <p>The following STATA chunk imports and describes the body measures NHANES dataset:</p>
 <pre class="stata"><code>import sasxport5 &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\BMX_E.XPT&quot;
-save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_BMX_E.dta&quot;
+save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_BMX_E.dta&quot;,replace
 de
 clear</code></pre>
-<pre><code>file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_BMX_E.dta already
-    exists
-r(602);
+<pre><code>file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_BMX_E.dta saved
 
-end of do-file
-r(602);</code></pre>
+
+Contains data from C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_BMX_E
+&gt; .dta
+ Observations:         9,762                  
+    Variables:            23                  28 Jun 2021 15:43
+-------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+-------------------------------------------------------------------------------
+seqn            double  %10.0g                Respondent sequence number
+bmdstats        double  %10.0g                Body Measures Component Status
+                                                Code
+bmxwt           double  %10.0g                Weight (kg)
+bmiwt           double  %10.0g                Weight Comment
+bmxrecum        double  %10.0g                Recumbent Length (cm)
+bmirecum        double  %10.0g                Recumbent Length Comment
+bmxhead         double  %10.0g                Head Circumference (cm)
+bmihead         double  %10.0g                Head Circumference Comment
+bmxht           double  %10.0g                Standing Height (cm)
+bmiht           double  %10.0g                Standing Height Comment
+bmxbmi          double  %10.0g                Body Mass Index (kg/m**2)
+bmxleg          double  %10.0g                Upper Leg Length (cm)
+bmileg          double  %10.0g                Upper Leg Length Comment
+bmxarml         double  %10.0g                Upper Arm Length (cm)
+bmiarml         double  %10.0g                Upper Arm Length Comment
+bmxarmc         double  %10.0g                Arm Circumference (cm)
+bmiarmc         double  %10.0g                Arm Circumference Comment
+bmxwaist        double  %10.0g                Waist Circumference (cm)
+bmiwaist        double  %10.0g                Waist Circumference Comment
+bmxtri          double  %10.0g                Triceps Skinfold (mm)
+bmitri          double  %10.0g                Triceps Skinfold Comment
+bmxsub          double  %10.0g                Subscapular Skinfold (mm)
+bmisub          double  %10.0g                Subscapular Skinfold Comment
+-------------------------------------------------------------------------------
+Sorted by: </code></pre>
 </div>
 <div id="b" class="section level2">
 <h2>b</h2>
@@ -294,7 +385,7 @@ clear</code></pre>
 Contains data from C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_BMX_E
 &gt; .dta
  Observations:         9,762                  
-    Variables:             9                  28 Jun 2021 11:08
+    Variables:             9                  28 Jun 2021 15:43
 -------------------------------------------------------------------------------
 Variable      Storage   Display    Value
     name         type    format    label      Variable label
@@ -315,30 +406,65 @@ Sorted by: </code></pre>
 <div id="c-import-diet-behaviour-and-nutrition" class="section level2">
 <h2>c import diet behaviour and nutrition</h2>
 <pre class="stata"><code>import sasxport5 &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\DBQ_E.XPT&quot;
-keep seqn dbd381 dbd411
-save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DBQ_E.dta&quot;
+keep seqn dbd381 dbd411 dbq421
+save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DBQ_E.dta&quot;,replace
 de
 clear</code></pre>
-<pre><code>file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DBQ_E.dta already
-    exists
-r(602);
+<pre><code>file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DBQ_E.dta saved
 
-end of do-file
-r(602);</code></pre>
+
+Contains data from C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DBQ_E
+&gt; .dta
+ Observations:        10,149                  
+    Variables:             4                  28 Jun 2021 15:43
+-------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+-------------------------------------------------------------------------------
+seqn            double  %10.0g                Respondent sequence number
+dbd381          double  %10.0g                # of times/week get school lunch
+dbd411          double  %10.0g                # of times/week get school
+                                                breakfast
+dbq421          double  %10.0g                School breakfast
+                                                free/reduced/full price
+-------------------------------------------------------------------------------
+Sorted by: </code></pre>
 </div>
 <div id="d-import-health-insurance" class="section level2">
 <h2>d import health insurance</h2>
 <pre class="stata"><code>import sasxport5 &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\HIQ_E.XPT&quot;
 keep seqn hiq011 hiq031a  hiq031b hiq031c hiq031d hiq031e hiq031f hiq031g hiq031h hiq031i hiq031j hiq031aa
-save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_HIQ_E.dta&quot;
+save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_HIQ_E.dta&quot;,replace
 de
 clear</code></pre>
-<pre><code>file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_HIQ_E.dta already
-    exists
-r(602);
+<pre><code>file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_HIQ_E.dta saved
 
-end of do-file
-r(602);</code></pre>
+
+Contains data from C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_HIQ_E
+&gt; .dta
+ Observations:        10,149                  
+    Variables:            13                  28 Jun 2021 15:43
+-------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+-------------------------------------------------------------------------------
+seqn            double  %10.0g                Respondent sequence number
+hiq011          double  %10.0g                Covered by health insurance
+hiq031a         double  %10.0g                Covered by private insurance
+hiq031b         double  %10.0g                Covered by Medicare
+hiq031c         double  %10.0g                Covered by Medi-Gap
+hiq031d         double  %10.0g                Covered by Medicaid
+hiq031e         double  %10.0g                Covered by SCHIP
+hiq031f         double  %10.0g                Covered by military health care
+hiq031g         double  %10.0g                Covered by Indian Health Service
+hiq031h         double  %10.0g                Covered by state-sponsored health
+                                                plan
+hiq031i         double  %10.0g                Covered by other government
+                                                insurance
+hiq031j         double  %10.0g                Covered by single service plan
+hiq031aa        double  %10.0g                No coverage of any type
+-------------------------------------------------------------------------------
+Sorted by: </code></pre>
 </div>
 </div>
 <div id="import-food-security-xpt" class="section level1">
@@ -347,7 +473,7 @@ r(602);</code></pre>
 <h2>a</h2>
 <p>The following STATA chunk imports and describes the Food Security NHANES dataset:</p>
 <pre class="stata"><code>import sasxport5 &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\FSQ_E.XPT&quot;
-#save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_FSQ_E.dta&quot;
+#save &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_FSQ_E.dta&quot;,replace
 de
 clear</code></pre>
 <pre><code>Unknown #command
@@ -437,7 +563,7 @@ clear</code></pre>
 Contains data from C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_FSQ_E
 &gt; .dta
  Observations:        10,149                  
-    Variables:             2                  28 Jun 2021 11:08
+    Variables:             2                  28 Jun 2021 15:43
 -------------------------------------------------------------------------------
 Variable      Storage   Display    Value
     name         type    format    label      Variable label
