@@ -86,7 +86,7 @@ clear
 
 ```{stata}
 import sasxport5 "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\DBQ_E.XPT"
-keep seqn dbd381 dbd411 dbq421
+keep seqn dbq360 dbd381 dbq400 dbd411 dbq421
 save "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\temp_DBQ_E.dta",replace
 de
 clear
