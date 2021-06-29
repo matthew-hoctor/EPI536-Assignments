@@ -53,3 +53,40 @@ ta age_3cat if age_instudy==1
 save,replace
 ```
 
+# 2: Income Recoding
+
+## a: meeting study criteria
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+su indfmpir
+recode indfmpir min/2=1 4/17=1 18/max=0,gen(fpl_instudy)
+bysort fpl_instudy: su indfmpir
+ta fpl_instudy
+save,replace
+```
+
+## b: income category
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+recode indfmpir min/3=. 4/7=0 8/11=1 12/17=2 18/max=.,gen(age_3cat)
+bysort age_3cat: su indfmpir
+ta age_3cat if fpl_instudy==1
+label define age_3cat 0 "4 to 7" 1 "8 to 11" 2 "12 to 17"
+label values age_3cat age_3cat
+ta age_3cat if fpl_instudy==1
+save,replace
+```
+
+
+
+
+
+
+
+
+
+
+
+
