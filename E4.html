@@ -250,38 +250,435 @@ div.tocify {
 <div id="age-recoding" class="section level1">
 <h1>1: Age Recoding</h1>
 <div id="a-meeting-study-criteria" class="section level2">
-<h2>a meeting study criteria</h2>
+<h2>a: meeting study criteria</h2>
 <pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+
 su ridageyr
 recode ridageyr min/3=0 4/17=1 18/max=0,gen(age_instudy)
+
+label define age_instudy 0 &quot;No&quot; 1 &quot;Yes&quot;
+label values age_instudy age_instudy
+label variable age_instudy &quot;Meets Age Inclusion Criteria&quot;
+
 bysort age_instudy: su ridageyr
 ta age_instudy
+
 save,replace</code></pre>
 <pre><code>    Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
     ridageyr |     10,149    32.96719    25.48364          0         80
 
-variable age_instudy already defined
-r(110);
+(9666 differences between ridageyr and age_instudy)
 
-end of do-file
-r(110);</code></pre>
+
+
+
+
+-------------------------------------------------------------------------------
+-&gt; age_instudy = No
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |      7,527    40.95682     24.9619          0         80
+
+-------------------------------------------------------------------------------
+-&gt; age_instudy = Yes
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |      2,622    10.03127    3.957492          4         17
+
+
+
+  Meets Age |
+  Inclusion |
+   Criteria |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         No |      7,527       74.16       74.16
+        Yes |      2,622       25.84      100.00
+------------+-----------------------------------
+      Total |     10,149      100.00
+
+file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta
+    saved</code></pre>
 </div>
 <div id="b-age-category" class="section level2">
-<h2>b age category</h2>
+<h2>b: age category</h2>
 <pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+
 recode ridageyr min/3=. 4/7=0 8/11=1 12/17=2 18/max=.,gen(age_3cat)
 bysort age_3cat: su ridageyr
 ta age_3cat if age_instudy==1
+
 label define age_3cat 0 &quot;4 to 7&quot; 1 &quot;8 to 11&quot; 2 &quot;12 to 17&quot;
 label values age_3cat age_3cat
+label variable age_3cat &quot;Age Category&quot;
+
 ta age_3cat if age_instudy==1
 save,replace</code></pre>
-<pre><code>variable age_3cat already defined
-r(110);
+<pre><code>(10149 differences between ridageyr and age_3cat)
 
-end of do-file
-r(110);</code></pre>
+
+-------------------------------------------------------------------------------
+-&gt; age_3cat = 0
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |        828    5.490338    1.149587          4          7
+
+-------------------------------------------------------------------------------
+-&gt; age_3cat = 1
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |        849    9.489988    1.147272          8         11
+
+-------------------------------------------------------------------------------
+-&gt; age_3cat = 2
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |        945     14.4963    1.684374         12         17
+
+-------------------------------------------------------------------------------
+-&gt; age_3cat = .
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |      7,527    40.95682     24.9619          0         80
+
+
+
+  RECODE of |
+   ridageyr |
+    (Age at |
+  Screening |
+Adjudicated |
+  - Recode) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        828       31.58       31.58
+          1 |        849       32.38       63.96
+          2 |        945       36.04      100.00
+------------+-----------------------------------
+      Total |      2,622      100.00
+
+        Age |
+   Category |      Freq.     Percent        Cum.
+------------+-----------------------------------
+     4 to 7 |        828       31.58       31.58
+    8 to 11 |        849       32.38       63.96
+   12 to 17 |        945       36.04      100.00
+------------+-----------------------------------
+      Total |      2,622      100.00
+
+file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta
+    saved</code></pre>
+</div>
+</div>
+<div id="income-recoding" class="section level1">
+<h1>2: Income Recoding</h1>
+<div id="a-meeting-study-criteria-1" class="section level2">
+<h2>a: meeting study criteria</h2>
+<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+
+su indfmpir
+recode indfmpir min/2=1 2.001/max=0,gen(fpl_instudy)
+
+label define fpl_instudy 0 &quot;No&quot; 1 &quot;Yes&quot;
+label values fpl_instudy fpl_instudy
+label variable fpl_instudy &quot;Meets Income Inclusion Criteria&quot;
+
+bysort fpl_instudy: su indfmpir
+ta fpl_instudy
+
+save,replace</code></pre>
+<pre><code>    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    indfmpir |      9,255    2.284368    1.584083          0          5
+
+(9249 differences between indfmpir and fpl_instudy)
+
+
+
+
+
+-------------------------------------------------------------------------------
+-&gt; fpl_instudy = No
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    indfmpir |      4,262    3.746244    1.090281       2.01          5
+
+-------------------------------------------------------------------------------
+-&gt; fpl_instudy = Yes
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    indfmpir |      4,993    1.036519    .5050164          0          2
+
+-------------------------------------------------------------------------------
+-&gt; fpl_instudy = .
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    indfmpir |          0
+
+      Meets |
+     Income |
+  Inclusion |
+   Criteria |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         No |      4,262       46.05       46.05
+        Yes |      4,993       53.95      100.00
+------------+-----------------------------------
+      Total |      9,255      100.00
+
+file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta
+    saved</code></pre>
+</div>
+<div id="b-income-category" class="section level2">
+<h2>b: income category</h2>
+<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+
+recode indfmpir min/1=0 1.001/2=1 2.001/max=.,gen(fpl_2cat)
+bysort fpl_2cat: su indfmpir
+
+label define fpl_2cat 0 &quot;0-100% FPL&quot; 1 &quot;101-200% FPL&quot;
+label values fpl_2cat fpl_2cat
+label variable fpl_2cat &quot;Income Category&quot;
+
+ta fpl_2cat if fpl_instudy==1
+save,replace</code></pre>
+<pre><code>(9196 differences between indfmpir and fpl_2cat)
+
+
+-------------------------------------------------------------------------------
+-&gt; fpl_2cat = 0
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    indfmpir |      2,448    .6056291    .2611164          0          1
+
+-------------------------------------------------------------------------------
+-&gt; fpl_2cat = 1
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    indfmpir |      2,545    1.450986    .2904587       1.01          2
+
+-------------------------------------------------------------------------------
+-&gt; fpl_2cat = .
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    indfmpir |      4,262    3.746244    1.090281       2.01          5
+
+      Income |
+    Category |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+  0-100% FPL |      2,448       49.03       49.03
+101-200% FPL |      2,545       50.97      100.00
+-------------+-----------------------------------
+       Total |      4,993      100.00
+
+file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta
+    saved</code></pre>
+</div>
+</div>
+<div id="overall-study-inclusion" class="section level1">
+<h1>3: Overall Study Inclusion</h1>
+<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+
+ta fpl_instudy age_instudy</code></pre>
+<pre><code>     Meets |
+    Income |  Meets Age Inclusion
+ Inclusion |       Criteria
+  Criteria |        No        Yes |     Total
+-----------+----------------------+----------
+        No |     3,267        995 |     4,262 
+       Yes |     3,562      1,431 |     4,993 
+-----------+----------------------+----------
+     Total |     6,829      2,426 |     9,255 </code></pre>
+</div>
+<div id="race" class="section level1">
+<h1>4: Race</h1>
+<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+
+recode ridreth1 3=0 4=1 1=2 2=3 5=3,gen(race_eth)
+bysort race_eth: su ridreth1
+
+label define race_eth 0 &quot;Non-Hispanic White&quot; 1 &quot;Non-Hispanic Black&quot; 2 &quot;Mexican American&quot; 3 &quot;Other&quot;
+label values race_eth race_eth
+label variable race_eth &quot;Recoded Race/Ethnicity&quot;
+ 
+ta ridreth1 race_eth
+save,replace</code></pre>
+<pre><code>(10149 differences between ridreth1 and race_eth)
+
+
+-------------------------------------------------------------------------------
+-&gt; race_eth = 0
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridreth1 |      4,115           3           0          3          3
+
+-------------------------------------------------------------------------------
+-&gt; race_eth = 1
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridreth1 |      2,211           4           0          4          4
+
+-------------------------------------------------------------------------------
+-&gt; race_eth = 2
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridreth1 |      2,157           1           0          1          1
+
+-------------------------------------------------------------------------------
+-&gt; race_eth = 3
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridreth1 |      1,666    2.837335    1.346092          2          5
+
+
+
+
+
+
+Race/Ethni |
+    city - |           Recoded Race/Ethnicity
+    Recode | Non-Hispa  Non-Hispa  Mexican A      Other |     Total
+-----------+--------------------------------------------+----------
+         1 |         0          0      2,157          0 |     2,157 
+         2 |         0          0          0      1,201 |     1,201 
+         3 |     4,115          0          0          0 |     4,115 
+         4 |         0      2,211          0          0 |     2,211 
+         5 |         0          0          0        465 |       465 
+-----------+--------------------------------------------+----------
+     Total |     4,115      2,211      2,157      1,666 |    10,149 
+
+file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta
+    saved</code></pre>
+</div>
+<div id="food-assistance" class="section level1">
+<h1>5: Food Assistance</h1>
+<div id="a-ungrouped-school-breakfast-recode" class="section level2">
+<h2>a: Ungrouped School Breakfast Recode</h2>
+<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+
+recode dbq421 1=1 2=2 3=3 .=.,gen(school_bkfst)
+ta dbq421 school_bkfst,m
+
+replace school_bkfst = 4 if (dbq360==2)
+replace school_bkfst = 4 if (dbq400==2)
+replace school_bkfst = 4 if (dbd411==0)
+ta dbq421 school_bkfst,m
+
+
+label define school_bkfst 1 &quot;Free&quot; 2 &quot;Reduced Price&quot; 3 &quot;Full Price&quot; 4 &quot;Non-participating&quot;
+label values school_bkfst school_bkfst
+label variable school_bkfst &quot;Recoded School Breakfast&quot;
+ta dbq421 school_bkfst,m
+
+save,replace</code></pre>
+<pre><code>(0 differences between dbq421 and school_bkfst)
+
+    School |
+ breakfast |
+free/reduc |     RECODE of dbq421 (School breakfast
+   ed/full |          free/reduced/full price)
+     price |         1          2          3          . |     Total
+-----------+--------------------------------------------+----------
+         1 |       824          0          0          0 |       824 
+         2 |         0         96          0          0 |        96 
+         3 |         0          0        147          0 |       147 
+         . |         0          0          0      9,082 |     9,082 
+-----------+--------------------------------------------+----------
+     Total |       824         96        147      9,082 |    10,149 
+
+(472 real changes made)
+
+(408 real changes made)
+
+(911 real changes made)
+
+    School |
+ breakfast |
+free/reduc |  RECODE of dbq421 (School breakfast free/reduced/full
+   ed/full |                         price)
+     price |         1          2          3          4          . |     Total
+-----------+-------------------------------------------------------+----------
+         1 |       824          0          0          0          0 |       824 
+         2 |         0         96          0          0          0 |        96 
+         3 |         0          0        147          0          0 |       147 
+         . |         0          0          0      1,791      7,291 |     9,082 
+-----------+-------------------------------------------------------+----------
+     Total |       824         96        147      1,791      7,291 |    10,149 
+
+    School |
+ breakfast |
+free/reduc |
+   ed/full |                Recoded School Breakfast
+     price |      Free  Reduced P  Full Pric  Non-parti          . |     Total
+-----------+-------------------------------------------------------+----------
+         1 |       824          0          0          0          0 |       824 
+         2 |         0         96          0          0          0 |        96 
+         3 |         0          0        147          0          0 |       147 
+         . |         0          0          0      1,791      7,291 |     9,082 
+-----------+-------------------------------------------------------+----------
+     Total |       824         96        147      1,791      7,291 |    10,149 
+
+file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta
+    saved</code></pre>
+</div>
+<div id="b-grouped-school-breakfast-variable" class="section level2">
+<h2>b: Grouped School Breakfast Variable</h2>
+<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta&quot;
+
+recode school_bkfst 3=0 1=1 2=1 4=0 .=.,gen(school_bkfst01)
+ta school_bkfst school_bkfst01,m
+
+label define school_bkfst01 0 &quot;Full Price&quot; 1 &quot;Free or Reduced Price&quot;
+label values school_bkfst01 school_bkfst01
+label variable school_bkfst01 &quot;Regrouped School Breakfast&quot;
+ta school_bkfst school_bkfst01,m
+
+save,replace</code></pre>
+<pre><code>(2034 differences between school_bkfst and school_bkfst01)
+
+                  | RECODE of school_bkfst (Recoded
+   Recoded School |        School Breakfast)
+        Breakfast |         0          1          . |     Total
+------------------+---------------------------------+----------
+             Free |         0        824          0 |       824 
+    Reduced Price |         0         96          0 |        96 
+       Full Price |       147          0          0 |       147 
+Non-participating |     1,791          0          0 |     1,791 
+                . |         0          0      7,291 |     7,291 
+------------------+---------------------------------+----------
+            Total |     1,938        920      7,291 |    10,149 
+
+
+
+
+
+   Recoded School |    Regrouped School Breakfast
+        Breakfast | Full Pric  Free or R          . |     Total
+------------------+---------------------------------+----------
+             Free |         0        824          0 |       824 
+    Reduced Price |         0         96          0 |        96 
+       Full Price |       147          0          0 |       147 
+Non-participating |     1,791          0          0 |     1,791 
+                . |         0          0      7,291 |     7,291 
+------------------+---------------------------------+----------
+            Total |     1,938        920      7,291 |    10,149 
+
+file C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta
+    saved</code></pre>
 </div>
 </div>
 

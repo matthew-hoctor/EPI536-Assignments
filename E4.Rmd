@@ -33,10 +33,17 @@ library(Statamarkdown)
 
 ```{stata}
 use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
 su ridageyr
 recode ridageyr min/3=0 4/17=1 18/max=0,gen(age_instudy)
+
+label define age_instudy 0 "No" 1 "Yes"
+label values age_instudy age_instudy
+label variable age_instudy "Meets Age Inclusion Criteria"
+
 bysort age_instudy: su ridageyr
 ta age_instudy
+
 save,replace
 ```
 
@@ -44,11 +51,15 @@ save,replace
 
 ```{stata}
 use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
 recode ridageyr min/3=. 4/7=0 8/11=1 12/17=2 18/max=.,gen(age_3cat)
 bysort age_3cat: su ridageyr
 ta age_3cat if age_instudy==1
+
 label define age_3cat 0 "4 to 7" 1 "8 to 11" 2 "12 to 17"
 label values age_3cat age_3cat
+label variable age_3cat "Age Category"
+
 ta age_3cat if age_instudy==1
 save,replace
 ```
@@ -59,10 +70,17 @@ save,replace
 
 ```{stata}
 use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
 su indfmpir
-recode indfmpir min/2=1 4/17=1 18/max=0,gen(fpl_instudy)
+recode indfmpir min/2=1 2.001/max=0,gen(fpl_instudy)
+
+label define fpl_instudy 0 "No" 1 "Yes"
+label values fpl_instudy fpl_instudy
+label variable fpl_instudy "Meets Income Inclusion Criteria"
+
 bysort fpl_instudy: su indfmpir
 ta fpl_instudy
+
 save,replace
 ```
 
@@ -70,14 +88,111 @@ save,replace
 
 ```{stata}
 use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
-recode indfmpir min/3=. 4/7=0 8/11=1 12/17=2 18/max=.,gen(age_3cat)
-bysort age_3cat: su indfmpir
-ta age_3cat if fpl_instudy==1
-label define age_3cat 0 "4 to 7" 1 "8 to 11" 2 "12 to 17"
-label values age_3cat age_3cat
-ta age_3cat if fpl_instudy==1
+
+recode indfmpir min/1=0 1.001/2=1 2.001/max=.,gen(fpl_2cat)
+bysort fpl_2cat: su indfmpir
+
+label define fpl_2cat 0 "0-100% FPL" 1 "101-200% FPL"
+label values fpl_2cat fpl_2cat
+label variable fpl_2cat "Income Category"
+
+ta fpl_2cat if fpl_instudy==1
 save,replace
 ```
+
+# 3: Overall Study Inclusion
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
+ta fpl_instudy age_instudy
+```
+
+# 4: Race
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
+recode ridreth1 3=0 4=1 1=2 2=3 5=3,gen(race_eth)
+bysort race_eth: su ridreth1
+
+label define race_eth 0 "Non-Hispanic White" 1 "Non-Hispanic Black" 2 "Mexican American" 3 "Other"
+label values race_eth race_eth
+label variable race_eth "Recoded Race/Ethnicity"
+ 
+ta ridreth1 race_eth
+save,replace
+```
+
+# 5: Food Assistance
+
+## a: Ungrouped School Breakfast Recode
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
+recode dbq421 1=1 2=2 3=3 .=.,gen(school_bkfst)
+ta dbq421 school_bkfst,m
+
+replace school_bkfst = 4 if (dbq360==2)
+replace school_bkfst = 4 if (dbq400==2)
+replace school_bkfst = 4 if (dbd411==0)
+ta dbq421 school_bkfst,m
+
+
+label define school_bkfst 1 "Free" 2 "Reduced Price" 3 "Full Price" 4 "Non-participating"
+label values school_bkfst school_bkfst
+label variable school_bkfst "Recoded School Breakfast"
+ta dbq421 school_bkfst,m
+
+save,replace
+```
+
+## b: Grouped School Breakfast Variable
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
+recode school_bkfst 3=0 1=1 2=1 4=0 .=.,gen(school_bkfst01)
+ta school_bkfst school_bkfst01,m
+
+label define school_bkfst01 0 "Full Price" 1 "Free or Reduced Price"
+label values school_bkfst01 school_bkfst01
+label variable school_bkfst01 "Regrouped School Breakfast"
+ta school_bkfst school_bkfst01,m
+
+save,replace
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
