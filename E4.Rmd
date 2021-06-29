@@ -1,5 +1,5 @@
 ---
-title: "Exercise 3 - EPI536-Assignments"
+title: "Exercise 4 - EPI536-Assignments"
 author: "Matthew Hoctor"
 date: "6/28/2021"
 output:
@@ -27,5 +27,29 @@ knitr::opts_chunk$set(engine.path = list(
 library(Statamarkdown)
 ```
 
-# 1: Income as a percent of the Federal Poverty Level
+# 1: Age Recoding
+
+## a: meeting study criteria
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+su ridageyr
+recode ridageyr min/3=0 4/17=1 18/max=0,gen(age_instudy)
+bysort age_instudy: su ridageyr
+ta age_instudy
+save,replace
+```
+
+## b: age category
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+recode ridageyr min/3=. 4/7=0 8/11=1 12/17=2 18/max=.,gen(age_3cat)
+bysort age_3cat: su ridageyr
+ta age_3cat if age_instudy==1
+label define age_3cat 0 "4 to 7" 1 "8 to 11" 2 "12 to 17"
+label values age_3cat age_3cat
+ta age_3cat if age_instudy==1
+save,replace
+```
 
