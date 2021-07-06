@@ -1,0 +1,144 @@
+---
+title: "Exercise 6 - EPI536-Assignments"
+author: "Matthew Hoctor"
+date: "7/6/2021"
+output:
+  html_document:
+    number_sections: no
+    theme: lumen
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(engine.path = list(
+  stata = "C:/Program Files/Stata17/StataBE-64"
+))
+```
+
+```{r libraries, include=FALSE}
+library(Statamarkdown)
+```
+
+# 1: Comparing age among boys with and without food assistance
+
+## a: Correcting for clustered/stratified sampling and survey weights
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+svy, subpop(if subpop2==1 & male==1): mean ridageyr,over(food_any)coeflegend
+svy, subpop(if subpop2==1 & male==1): mean ridageyr,over(food_any)
+
+test _b[c.ridageyr@0bn.food_any] =_b[c.ridageyr@1.food_any]
+```
+
+## b: Correcting for clustered/stratified sampling, but not survey weights
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta"
+
+svyset sdmvpsu, strata(sdmvstra)
+svy,subpop(if subpop2==1 & male==1): mean ridageyr,over(food_any)
+
+test _b[c.ridageyr@0bn.food_any] =_b[c.ridageyr@1.food_any]
+```
+
+## c: Ignoring survey sampling
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta"
+
+svyset
+
+ttest ridageyr if subpop2==1 & male==1,by(food_any)
+```
+
+# 2: Comparing race/ethnicity among boys with and without food assistance
+
+## a: Correcting for clustered/stratified sampling and survey weights
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+svy, subpop(if subpop2==1 & male==1): ta race_eth food_any,col percent
+```
+
+## b: Correcting for clustered/stratified sampling, but not survey weights
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta"
+
+svyset sdmvpsu, strata(sdmvstra)
+svy, subpop(if subpop2==1 & male==1): ta race_eth food_any,col percent
+```
+
+## c: Ignoring survey sampling
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta"
+
+svyset
+
+ta race_eth food_any if subpop2==1 & male==0,col chi2
+```
+
+# 3: Exporting data
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+tabout race_eth food_any if subpop2==1 & male==1 using "Tabout.csv", c(col) f(2) svy replace
+
+```
+
+# 4: Replicate Table 1, Boys
+
+## a: Counts are unweighted
+
+(practice using the tabout command to generate weighted column percentages with one line of code)
+
+## b: Report mean ± SE
+
+(the “mean ± SD” label is incorrect in the paper) (practice using the tabout command to generate weighted means ± se for continuous variables)
+
+## c: Discrepancies of counts of overweight & Obese
+
+There are minor discrepancies of the counts of overweight and obese, and for the percent with private insurance compared to the data reported in the Kohn article.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
