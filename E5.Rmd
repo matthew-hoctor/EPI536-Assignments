@@ -1,0 +1,248 @@
+---
+title: "Exercise 5 - EPI536-Assignments"
+author: "Matthew Hoctor"
+date: "7/4/2021"
+output:
+  html_document:
+    number_sections: no
+    theme: lumen
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(engine.path = list(
+  stata = "C:/Program Files/Stata17/StataBE-64"
+))
+```
+
+```{r libraries, include=FALSE}
+library(Statamarkdown)
+```
+
+# 2: Age & FPL criteria
+
+## a: age criteria
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
+bysort age_instudy: su ridageyr
+ta age_instudy
+```
+
+Repeating the above analysis with the dataset provided in class:
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+bysort age_instudy: su ridageyr
+ta age_instudy
+```
+
+## b: FPL criteria
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
+bysort fpl_instudy: su indfmpir
+ta fpl_instudy
+```
+
+Repeating the above analysis with the dataset provided in class:
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+bysort fpl_instudy: su indfmpir
+ta fpl_instudy
+```
+
+# 3: tabulation of both study inclusion criteria
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
+gen subpop1=0
+	replace subpop1=1 if age_instudy==1 & fpl_instudy==1
+ta subpop1
+
+label define subpop1 0 "No" 1 "Yes"
+label values subpop1 subpop1
+label variable subpop1 "Meets Inclusion Criteria"
+ta subpop1
+
+save,replace
+```
+
+Repeating the above analysis with the dataset provided in class:
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+gen subpop1=0
+	replace subpop1=1 if age_instudy==1 & fpl_instudy==1
+ta subpop1
+
+label define subpop1 0 "No" 1 "Yes"
+label values subpop1 subpop1
+label variable subpop1 "Meets Inclusion Criteria"
+ta subpop1
+
+save,replace
+```
+
+# 4: complete data on exposure variables and outcome variables
+
+## for missing outcome (dependant) variables
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_merged.dta"
+
+gen miss_dv=missing(bmxbmi, bmxwaist)
+ta subpop1 miss_dv
+
+label define miss_dv 0 "No" 1 "Yes"
+label values miss_dv miss_dv
+label variable miss_dv "Missing Dependent Variables"
+ta subpop1 miss_dv
+ta miss_dv
+
+save,replace
+```
+
+Repeating the above analysis with the dataset provided in class:
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+gen miss_dv=missing(bmxbmi, bmxwaist)
+ta subpop1 miss_dv
+
+label define miss_dv 0 "No" 1 "Yes"
+label values miss_dv miss_dv
+label variable miss_dv "Missing Dependent Variables"
+ta subpop1 miss_dv
+
+save,replace
+```
+
+## For missing exposure (independant) variables
+
+The data file from E4 does not have the variables necessary (food_stamp, WIC, school_meal, foodinsec).
+
+Repeating the above analysis with the dataset provided in class:
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+gen miss_iv=missing(food_stamp, WIC, school_meal, foodinsec)
+ta food_stamp miss_iv,m
+ta WIC miss_iv,m
+ta school_meal miss_iv,m
+ta foodinsec miss_iv,m
+
+label define miss_iv 0 "No" 1 "Yes"
+label values miss_iv miss_iv
+label variable miss_iv "Missing Independent Variables"
+ta subpop1 miss_iv
+
+save,replace
+```
+
+# 5: creating a variable to indicate complete data and meets inclusion criteria
+
+Continuing on using only the dataset provided in class:
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+gen subpop2=0
+	replace subpop2=1 if subpop1==1 & miss_iv==0 & miss_dv==0
+ta subpop2
+
+label define subpop2 0 "No" 1 "Yes"
+label values subpop2 subpop2
+label variable subpop2 "Meets Inclusion Criteria & No Missing values"
+ta subpop2
+
+save,replace
+```
+
+# 6 Calculating number remaining at each step
+
+## <= 200% FPL
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+ta fpl_instudy age_instudy
+```
+
+## missing primary outcome (BMI)
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+gen miss_bmi=missing(bmxbmi)
+ta subpop1 miss_bmi
+```
+
+## missing secondary outcome (waist circumfrence, WC)
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+gen miss_bmi=missing(bmxbmi)
+gen miss_waist=missing(bmxwaist)
+ta subpop1 miss_waist if miss_bmi==0
+```
+
+## missing primary exposure (Food stamps; WIC; free/reduced school meals)
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+ta miss_iv miss_dv if subpop1==1
+```
+
+## Missing Effect Modifier (food security)
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+ta fsdch if subpop2==1
+```
+
+## missing Gender or Age
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+ta ridageyr if subpop2==1
+ta riagendr if subpop2==1
+```
+
+## missing health insurance
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+ta hinsur if subpop2==1
+```
+
+## Missing primary respondent gender, age, or education
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_newvars.dta"
+
+ta pr_ed3 if subpop2==1
+```
+
+
