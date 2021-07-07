@@ -27,12 +27,137 @@ knitr::opts_chunk$set(engine.path = list(
 library(Statamarkdown)
 ```
 
-# 1: Examine exposure: food assistance
+# I: Univariate Analysis
 
-## a: tabulating food security and food assistance
+## 1: Examine exposure: food assistance
+
+### a: tabulating food security and food assistance
 
 ```{stata}
 use "NHANES0708_all.dta"
 
-ta fsdch food_any
+ta food_any foodinsec
 ```
+
+## 2: Examine outcome: BMI z-score
+
+Analysis limited to food secure boys.
+
+### a: Calculate descriptive Statistics
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+su ridageyr if subpop2==1 & male==1 & foodinsec==0
+svy,subpop(if subpop2==1 & male==1 & foodinsec==0): mean ridageyr
+
+tabstat ridageyr [aweight=wtmec2yr] if subpop2==1 & male==1 & foodinsec==0, stat(p50 p10 p90) col(stat)
+
+sktest ridageyr [aweight=wtmec2yr] if subpop2==1 & male==1 & foodinsec==0
+```
+
+### b: Create a histogram and box plot
+
+```{stata}
+use "NHANES0708_all.dta"
+
+hist bmiz if subpop2==1 & male==1 & foodinsec==0,norm
+
+graph export BMI-z_hist.svg, replace
+```
+
+```{stata}
+use "NHANES0708_all.dta"
+
+graph box bmiz if subpop2==1 & male==1 & foodinsec==0
+
+graph export BMI-z_boxplot.svg, replace
+```
+
+<embed src="BMI-z_hist.svg" type="image/svg+xml" />
+<embed src="BMI-z_boxplot.svg" type="image/svg+xml" />
+
+
+## 3: Examine other independant variables
+
+Analysis limited to food secure boys.
+
+### a: Age
+
+#### Calculate descriptive statistics
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+su ridageyr if subpop2==1 & male==1 & foodinsec==0
+svy,subpop(if subpop2==1 & male==1 & foodinsec==0): mean ridageyr
+
+tabstat ridageyr [aweight=wtmec2yr] if subpop2==1 & male==1 & foodinsec==0, stat(p50 p10 p90) col(stat)
+
+sktest ridageyr [aweight=wtmec2yr] if subpop2==1 & male==1 & foodinsec==0
+```
+
+#### Create a histogram and box plot
+
+```{stata}
+use "NHANES0708_all.dta"
+
+hist ridageyr if subpop2==1 & male==1 & foodinsec==0,norm
+
+graph export age_hist.svg, replace
+```
+
+```{stata}
+use "NHANES0708_all.dta"
+
+graph box ridageyr if subpop2==1 & male==1 & foodinsec==0
+
+graph export age_boxplot.svg, replace
+```
+
+<embed src="age_hist.svg" type="image/svg+xml" />
+<embed src="age_boxplot.svg" type="image/svg+xml" />
+
+### b: categorical variables
+
+```{stata}
+use "NHANES0708_all.dta"
+
+ta fpl_2cat if subpop2==1 & male==1 & foodinsec==0
+
+ta hinsur if subpop2==1 & male==1 & foodinsec==0
+```
+
+# II: Bivariate Analysis
+
+For the questions in this section, limit the analyses to food secure boys.
+
+## 1: cross-tabulation of categorical independent variables with high waist circumfrence
+
+```{stata}
+use "NHANES0708_all.dta"
+
+ta fpl_2cat if subpop2==1 & male==1 & foodinsec==0
+
+ta hinsur if subpop2==1 & male==1 & foodinsec==0
+```
+
+## 2: 10th and 90th percentile values of  continuous independent variables within each category of the dependent variable (high waist circumference).  
+
+
+## 3: Cross-tabulate example categorical independent variables with the exposure variable, food assistance.
+
+
+
+## 4: Calculate 10th and 90th percentile values of an example continuous covariate within each category of the exposure (food assistance), among food secure boys.
+
+
+
+
+
+
+
