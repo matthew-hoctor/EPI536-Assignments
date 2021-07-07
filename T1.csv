@@ -1,0 +1,22 @@
+	food_any		
+	0	1	Total
+	No.	No.	No.
+RECODE of ridageyr (Age at Screening Adjudicated - Recode)			
+4 to 7	49	192	241
+8 to 11	24	192	216
+12 to 17	39	181	220
+Total	112	565	677
+
+RECODE of ridreth1 (Race/Ethnicity - Recode)			
+White-NH	54	139	193
+Black-NH	10	144	154
+Mex Am	29	186	215
+Oth	19	96	115
+Total	112	565	677
+
+bmicat			
+Normal wt	75	357	432
+Overweight	17	111	128
+Obese	20	97	117
+Total	112	565	677
+

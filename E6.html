@@ -251,7 +251,7 @@ div.tocify {
 <h1>1: Comparing age among boys with and without food assistance</h1>
 <div id="a-correcting-for-clusteredstratified-sampling-and-survey-weights" class="section level2">
 <h2>a: Correcting for clustered/stratified sampling and survey weights</h2>
-<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta&quot;
+<pre class="stata"><code>use &quot;NHANES0708_all.dta&quot;
 
 svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
 svy, subpop(if subpop2==1 &amp; male==1): mean ridageyr,over(food_any)coeflegend
@@ -313,7 +313,7 @@ Adjusted Wald test
 </div>
 <div id="b-correcting-for-clusteredstratified-sampling-but-not-survey-weights" class="section level2">
 <h2>b: Correcting for clustered/stratified sampling, but not survey weights</h2>
-<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta&quot;
+<pre class="stata"><code>use &quot;NHANES0708_all.dta&quot;
 
 svyset sdmvpsu, strata(sdmvstra)
 svy,subpop(if subpop2==1 &amp; male==1): mean ridageyr,over(food_any)
@@ -355,7 +355,7 @@ Adjusted Wald test
 </div>
 <div id="c-ignoring-survey-sampling" class="section level2">
 <h2>c: Ignoring survey sampling</h2>
-<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta&quot;
+<pre class="stata"><code>use &quot;NHANES0708_all.dta&quot;
 
 svyset
 
@@ -385,7 +385,7 @@ Ho: diff = 0                                     degrees of freedom =      675
 <h1>2: Comparing race/ethnicity among boys with and without food assistance</h1>
 <div id="a-correcting-for-clusteredstratified-sampling-and-survey-weights-1" class="section level2">
 <h2>a: Correcting for clustered/stratified sampling and survey weights</h2>
-<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta&quot;
+<pre class="stata"><code>use &quot;NHANES0708_all.dta&quot;
 
 svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
 svy, subpop(if subpop2==1 &amp; male==1): ta race_eth food_any,col percent</code></pre>
@@ -426,7 +426,7 @@ Recode)   |     0      1  Total
 </div>
 <div id="b-correcting-for-clusteredstratified-sampling-but-not-survey-weights-1" class="section level2">
 <h2>b: Correcting for clustered/stratified sampling, but not survey weights</h2>
-<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta&quot;
+<pre class="stata"><code>use &quot;NHANES0708_all.dta&quot;
 
 svyset sdmvpsu, strata(sdmvstra)
 svy, subpop(if subpop2==1 &amp; male==1): ta race_eth food_any,col percent</code></pre>
@@ -467,7 +467,7 @@ Recode)   |     0      1  Total
 </div>
 <div id="c-ignoring-survey-sampling-1" class="section level2">
 <h2>c: Ignoring survey sampling</h2>
-<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta&quot;
+<pre class="stata"><code>use &quot;NHANES0708_all.dta&quot;
 
 svyset
 
@@ -508,11 +508,11 @@ ta race_eth food_any if subpop2==1 &amp; male==0,col chi2</code></pre>
 </div>
 <div id="exporting-data" class="section level1">
 <h1>3: Exporting data</h1>
-<pre class="stata"><code>use &quot;C:\Users\Matt\Documents\EPI536\EPI536-Assignments\NHANES0708_all.dta&quot;
+<pre class="stata"><code>use &quot;NHANES0708_all.dta&quot;
 
 svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
 tabout race_eth food_any if subpop2==1 &amp; male==1 using &quot;Tabout.csv&quot;, c(col) f(2) svy replace
-</code></pre>
+tabout food_any if subpop2==1 &amp; male==1 using &quot;Tabout.csv&quot;, c(mean ridageyr se) f(2) sort sum svy append</code></pre>
 <pre><code>      pweight: wtmec2yr
           VCE: linearized
   Single unit: missing
@@ -532,22 +532,63 @@ White-NH        0.71    0.42    0.49
 Black-NH        0.04    0.19    0.16
 Mex Am  0.12    0.25    0.22
 Oth     0.13    0.14    0.14
-Total   1.00    1.00    1.00</code></pre>
+Total   1.00    1.00    1.00
+
+Survey results being calculated
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..........
+Table output written to: Tabout.csv
+
+        food_any                
+RECODE of ridreth1 (Race/Ethnicity - Recode)    0       1       Total
+        Prop.   Prop.   Prop.
+White-NH        0.71    0.42    0.49
+Black-NH        0.04    0.19    0.16
+Mex Am  0.12    0.25    0.22
+Oth     0.13    0.14    0.14
+Total   1.00    1.00    1.00
+
+food_any        Mean    SE
+0       9.70    (0.55)
+1       10.10   (0.30)
+Total   10.00   (0.30)</code></pre>
 </div>
 <div id="replicate-table-1-boys" class="section level1">
 <h1>4: Replicate Table 1, Boys</h1>
-<div id="a-counts-are-unweighted" class="section level2">
-<h2>a: Counts are unweighted</h2>
-<p>(practice using the tabout command to generate weighted column percentages with one line of code)</p>
-</div>
-<div id="b-report-mean-se" class="section level2">
-<h2>b: Report mean ± SE</h2>
-<p>(the “mean ± SD” label is incorrect in the paper) (practice using the tabout command to generate weighted means ± se for continuous variables)</p>
-</div>
-<div id="c-discrepancies-of-counts-of-overweight-obese" class="section level2">
-<h2>c: Discrepancies of counts of overweight &amp; Obese</h2>
-<p>There are minor discrepancies of the counts of overweight and obese, and for the percent with private insurance compared to the data reported in the Kohn article.</p>
-</div>
+<p>a: Counts are unweighted (practice using the tabout command to generate weighted column percentages with one line of code) b: Report mean ± SE (the “mean ± SD” label is incorrect in the paper) (practice using the tabout command to generate weighted means ± se for continuous variables) c: Discrepancies of counts of overweight &amp; Obese There are minor discrepancies of the counts of overweight and obese, and for the percent with private insurance compared to the data reported in the Kohn article.</p>
+<pre class="stata"><code>use &quot;NHANES0708_all.dta&quot;
+
+#svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+tabout age_3cat race_eth bmicat food_any if subpop2==1 &amp; male==1 using &quot;T1.csv&quot;, c(freq) f(0) replace
+#tabout bmiz food_any if subpop2==1 &amp; male==1 using &quot;T1.csv&quot;, c(freq col) f(0) append</code></pre>
+<pre><code>Unknown #command
+
+Table output written to: T1.csv
+
+        food_any                
+        0       1       Total
+        No.     No.     No.
+RECODE of ridageyr (Age at Screening Adjudicated - Recode)                     
+&gt;  
+4 to 7  49      192     241
+8 to 11 24      192     216
+12 to 17        39      181     220
+Total   112     565     677
+
+RECODE of ridreth1 (Race/Ethnicity - Recode)                    
+White-NH        54      139     193
+Black-NH        10      144     154
+Mex Am  29      186     215
+Oth     19      96      115
+Total   112     565     677
+
+bmicat                  
+Normal wt       75      357     432
+Overweight      17      111     128
+Obese   20      97      117
+Total   112     565     677
+
+Unknown #command</code></pre>
 </div>
 
 
