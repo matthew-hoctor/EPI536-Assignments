@@ -558,37 +558,32 @@ Total   10.00   (0.30)</code></pre>
 <p>a: Counts are unweighted (practice using the tabout command to generate weighted column percentages with one line of code) b: Report mean ± SE (the “mean ± SD” label is incorrect in the paper) (practice using the tabout command to generate weighted means ± se for continuous variables) c: Discrepancies of counts of overweight &amp; Obese There are minor discrepancies of the counts of overweight and obese, and for the percent with private insurance compared to the data reported in the Kohn article.</p>
 <pre class="stata"><code>use &quot;NHANES0708_all.dta&quot;
 
-#svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
-tabout age_3cat race_eth bmicat food_any if subpop2==1 &amp; male==1 using &quot;T1.csv&quot;, c(freq) f(0) replace
-#tabout bmiz food_any if subpop2==1 &amp; male==1 using &quot;T1.csv&quot;, c(freq col) f(0) append</code></pre>
-<pre><code>Unknown #command
+tabout age_3cat race_eth bmicat food_any if subpop2==1 &amp; male==1 using &quot;T1.csv&quot;, c(freq col) f(0 1) replace</code></pre>
+<pre><code>Table output written to: T1.csv
 
-Table output written to: T1.csv
-
-        food_any                
-        0       1       Total
-        No.     No.     No.
+        food_any                                        
+        0       0       1       1       Total   Total
+        No.     %       No.     %       No.     %
 RECODE of ridageyr (Age at Screening Adjudicated - Recode)                     
-&gt;  
-4 to 7  49      192     241
-8 to 11 24      192     216
-12 to 17        39      181     220
-Total   112     565     677
+&gt;                          
+4 to 7  49      43.8    192     34.0    241     35.6
+8 to 11 24      21.4    192     34.0    216     31.9
+12 to 17        39      34.8    181     32.0    220     32.5
+Total   112     100.0   565     100.0   677     100.0
 
-RECODE of ridreth1 (Race/Ethnicity - Recode)                    
-White-NH        54      139     193
-Black-NH        10      144     154
-Mex Am  29      186     215
-Oth     19      96      115
-Total   112     565     677
+RECODE of ridreth1 (Race/Ethnicity - Recode)                                   
+&gt;          
+White-NH        54      48.2    139     24.6    193     28.5
+Black-NH        10      8.9     144     25.5    154     22.7
+Mex Am  29      25.9    186     32.9    215     31.8
+Oth     19      17.0    96      17.0    115     17.0
+Total   112     100.0   565     100.0   677     100.0
 
-bmicat                  
-Normal wt       75      357     432
-Overweight      17      111     128
-Obese   20      97      117
-Total   112     565     677
-
-Unknown #command</code></pre>
+bmicat                                          
+Normal wt       75      67.0    357     63.2    432     63.8
+Overweight      17      15.2    111     19.6    128     18.9
+Obese   20      17.9    97      17.2    117     17.3
+Total   112     100.0   565     100.0   677     100.0</code></pre>
 </div>
 
 

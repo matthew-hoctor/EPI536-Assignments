@@ -122,6 +122,11 @@ graph export age_boxplot.svg, replace
 <embed src="age_hist.svg" type="image/svg+xml" />
 <embed src="age_boxplot.svg" type="image/svg+xml" />
 
+These exported images displayed using html:
+
+><embed src="age_hist.svg" type="image/svg+xml" />
+><embed src="age_boxplot.svg" type="image/svg+xml" />
+
 ### b: categorical variables
 
 ```{stata}
@@ -141,19 +146,40 @@ For the questions in this section, limit the analyses to food secure boys.
 ```{stata}
 use "NHANES0708_all.dta"
 
-ta fpl_2cat if subpop2==1 & male==1 & foodinsec==0
+ta food_any wccata if subpop2==1 & male==1 & foodinsec==0
 
-ta hinsur if subpop2==1 & male==1 & foodinsec==0
+ta hinsur wccata if subpop2==1 & male==1 & foodinsec==0
 ```
 
 ## 2: 10th and 90th percentile values of  continuous independent variables within each category of the dependent variable (high waist circumference).  
 
+```{stata}
+use "NHANES0708_all.dta"
+
+tabstat ridageyr if subpop2==1 & male==1 & foodinsec==0 & wccata==0, stat(p10 p90) col(stat)
+
+tabstat ridageyr if subpop2==1 & male==1 & foodinsec==0 & wccata==1, stat(p10 p90) col(stat)
+```
 
 ## 3: Cross-tabulate example categorical independent variables with the exposure variable, food assistance.
 
+```{stata}
+use "NHANES0708_all.dta"
 
+ta fpl_2cat food_any if subpop2==1 & male==1 & foodinsec==0
+
+ta hinsur food_any if subpop2==1 & male==1 & foodinsec==0
+```
 
 ## 4: Calculate 10th and 90th percentile values of an example continuous covariate within each category of the exposure (food assistance), among food secure boys.
+
+```{stata}
+use "NHANES0708_all.dta"
+
+tabstat ridageyr if subpop2==1 & male==1 & foodinsec==0 & food_any==0, stat(p10 p90) col(stat)
+
+tabstat ridageyr if subpop2==1 & male==1 & foodinsec==0 & food_any==1, stat(p10 p90) col(stat)
+```
 
 
 

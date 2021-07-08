@@ -112,7 +112,7 @@ c: Discrepancies of counts of overweight & Obese There are minor discrepancies o
 ```{stata}
 use "NHANES0708_all.dta"
 
-tabout age_3cat race_eth bmicat food_any if subpop2==1 & male==1 using "T1.csv", c(freq) f(0) replace
+tabout age_3cat race_eth bmicat food_any if subpop2==1 & male==1 using "T1.csv", c(freq col) f(0 1) replace
 ```
 
 
