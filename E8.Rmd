@@ -1,0 +1,191 @@
+---
+title: "Exercise 8 - EPI536-Assignments"
+author: "Matthew Hoctor"
+date: "7/9/2021"
+output:
+  html_document:
+    number_sections: no
+    theme: lumen
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(engine.path = list(
+  stata = "C:/Program Files/Stata17/StataBE-64"
+))
+```
+
+```{r libraries, include=FALSE}
+library(Statamarkdown)
+```
+
+# A: Comparison of exposures and outcomes with possible confounders
+
+## 1:  associations between the exposure variable (food assistance) and independent variables
+
+Among food-secure boys.
+
+### a: Cross-tabulate food assistance with categorical covariates
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta race_eth food_any,col percent
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta hinsur food_any,col percent
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta age_3cat food_any,col percent
+
+```
+
+### b: Calculate mean values of continuous covariates within each category of food assistance
+
+Formally compare these mean values using the adjusted Wald test. Example: age (ridageyr).
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): mean ridageyr,over(food_any)
+
+test _b[c.ridageyr@0bn.food_any] =_b[c.ridageyr@1.food_any]
+```
+
+## 2 Calculate associations between the dependent variable (high waist circumference [wccata]) and independent variables
+
+Among food secure boys
+
+First, conduct descriptive analysis (a and b), then crude regression analysis (c).
+
+### a: Cross-tabulate high waist circumference with categorical independent variables (exposure and covariates)
+
+Test these associations for each variable using the Design-based F test (survey analysis equivalent to the chi-square test for independence).
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta food_any wccata,col percent
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta race_eth wccata,col percent
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta hinsur wccata,col percent
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta pr_age wccata,col percent
+```
+
+### b: Calculate mean values of continuous independent variables (covariates) within each category of high waist circumference, among food secure boys.
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): mean ridageyr,over(wccata)coeflegend
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): mean ridageyr,over(wccata)
+
+test _b[c.ridageyr@0bn.wccata] =_b[c.ridageyr@1.wccata]
+```
+
+### c: Using simple logistic regression models, calculate the crude odds ratios (OR) for the associations between each independent variable and waist circumference among food secure boys.
+
+Descriptive analysis provides information about the absolute prevalence or means of characteristics among participants with and without the outcome.  Calculation of crude odds ratios is also an important first step to regression analysis and provides initial ORs as you build your multivariable models.
+For this exercise, include child age as a linear term.  We will work with this variable more in Exercise E9.
+
+#### Food Assistance
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any,or
+```
+
+#### Race/Ethnicity
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.race_eth
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.race_eth,or
+#xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logistic wccata i.race_eth
+```
+
+#### Health Insurance (hinsur)
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.hinsur
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.hinsur,or
+#xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logistic wccata i.hinsur
+```
+
+#### Primary Respondant Age Category (pr_age)
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.pr_age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.pr_age,or
+#xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logistic wccata i.pr_age
+```
+
+#### Age
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata ridageyr
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata ridageyr,or
+#xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logistic wccata ridageyr
+```
+
+# B
+
+## 4 Cross-tabulate each pair of the three categorical covariates among food secure boys
+
+### race/eth vs health insurance
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta race_eth hinsur,row percent
+```
+
+### race/eth vs respondant age
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta race_eth pr_age,row percent
+```
+
+### health insurance vs respondant age
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+svy, subpop(if subpop2==1 & male==1 & foodinsec==0): ta hinsur pr_age,row percent
+```
+
