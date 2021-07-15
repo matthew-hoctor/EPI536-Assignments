@@ -43,11 +43,75 @@ bysort age_q5: tabstat ridageyr [aweight=wtmec2yr],stat(n min max p50)
 
 # 2 Run the crude model with the categorical quintile variable.
 
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+xtile age_q5=ridageyr [aweight=wtmec2yr] if subpop2==1,nq(5)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.age_q5
+```
+
 # 3 Run the crude model with the linear age term.
+
+```{stata}
+use "NHANES0708_all.dta"
+
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+xtile age_q5=ridageyr [aweight=wtmec2yr] if subpop2==1,nq(5)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata ridageyr
+```
 
 # 4 How closely does the linear relationship align with the quintiles?
 
 # 5 Test higher order terms: quadratic and cubic models
+
+## Quadratic
+
+This first creates a centered age variable, and creates higher-order terms based on that variable.
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\Assignments\NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+# Calculates weighted mean for creating the centered age variable
+svy,subpop(subpop2): mean ridageyr
+# Creates weighted age variable
+gen agec=ridageyr-10.2
+
+# Creates higher-order age variables
+gen agec_sq=agec^2
+gen agec_cb=agec^3
+
+# Verifying new variables
+su ridageyr agec agec_sq agec_cb if subpop2==1
+
+# Run Quadratic
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata agec agec_sq
+```
+
+## Cubic
+
+This first creates a centered age variable, and creates higher-order terms based on that variable.
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\Assignments\NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+# Calculates weighted mean for creating the centered age variable
+svy,subpop(subpop2): mean ridageyr
+# Creates weighted age variable
+gen agec=ridageyr-10.2
+
+# Creates higher-order age variables
+gen agec_sq=agec^2
+gen agec_cb=agec^3
+
+# Run Cubic
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata agec agec_sq agec_cb
+```
+
 
 # Bonus
 
@@ -77,42 +141,40 @@ graph export nlcheck.svg, replace
 
 # Stata Code Accompanying the assignment
 
-```{stata}
-# *Stata-generated plot
-# 
-# *Create quintile variable
-# xtile prage_q5=dmdhrage [aweight=wtmec2yr] if subpop2==1,nq(5)
-# 
-# *Create centered variable
-# svy,subpop(subpop2): mean dmdhrage
-# *mean PR age: 39.0
-# gen pragec=dmdhrage-39
-# *Create higher order terms
-# gen pragec_sq=pragec^2
-# gen pragec_cb=pragec^3
-# 
-# *Run model with age quintiles
-# xi: svy,subpop(if subpop2==1 & male==0 & foodinsec==0): logit wccata i.prage_q5
-# predict pred_wc2_q5,xb
-# predict pred_wc2_se_q5,stdp
-# gen pred_wc2_ub_q5=pred_wc2_q5 + 1.96*pred_wc2_se_q5
-# gen pred_wc2_lb_q5=pred_wc2_q5 - 1.96*pred_wc2_se_q5
-# 
-# *Run model with linear age
-# xi: svy,subpop(if subpop2==1 & male==0 & foodinsec==0): logit wccata dmdhrage
-# predict pred_wc2_x,xb
-# *Run model with quadratic age
-# xi: svy,subpop(if subpop2==1 & male==0 & foodinsec==0): logit wccata pragec pragec_sq
-# predict pred_wc2_sq,xb
-# 
-# twoway scatter pred_wc2_q5 dmdhrage if subpop2==1 & male==0 & foodinsec==0, mcolor(blue) ///
-# 	|| scatter pred_wc2_lb_q5 dmdhrage if subpop2==1 & male==0 & foodinsec==0, msymbol(smx) mcolor(blue) ///
-# 	|| scatter pred_wc2_ub_q5 dmdhrage if subpop2==1 & male==0 & foodinsec==0, msymbol(smx) mcolor(blue) ///
-# 	|| scatter pred_wc2_x dmdhrage if subpop2==1 & male==0 & foodinsec==0 ///
-# 	|| scatter pred_wc2_sq dmdhrage if subpop2==1 & male==0 & foodinsec==0
-# 	
 
-```
+*Stata-generated plot
+
+*Create quintile variable
+xtile prage_q5=dmdhrage [aweight=wtmec2yr] if subpop2==1,nq(5)
+
+*Create centered variable
+svy,subpop(subpop2): mean dmdhrage
+*mean PR age: 39.0
+gen pragec=dmdhrage-39
+*Create higher order terms
+gen pragec_sq=pragec^2
+gen pragec_cb=pragec^3
+
+*Run model with age quintiles
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.prage_q5
+predict pred_wc2_q5,xb
+predict pred_wc2_se_q5,stdp
+gen pred_wc2_ub_q5=pred_wc2_q5 + 1.96*pred_wc2_se_q5
+gen pred_wc2_lb_q5=pred_wc2_q5 - 1.96*pred_wc2_se_q5
+
+*Run model with linear age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata dmdhrage
+predict pred_wc2_x,xb
+*Run model with quadratic age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata pragec pragec_sq
+predict pred_wc2_sq,xb
+
+twoway scatter pred_wc2_q5 dmdhrage if subpop2==1 & male==1 & foodinsec==0, mcolor(blue) ///
+ 	|| scatter pred_wc2_lb_q5 dmdhrage if subpop2==1 & male==1 & foodinsec==0, msymbol(smx) mcolor(blue) ///
+ 	|| scatter pred_wc2_ub_q5 dmdhrage if subpop2==1 & male==1 & foodinsec==0, msymbol(smx) mcolor(blue) ///
+ 	|| scatter pred_wc2_x dmdhrage if subpop2==1 & male==1 & foodinsec==0 ///
+ 	|| scatter pred_wc2_sq dmdhrage if subpop2==1 & male==1 & foodinsec==0
+
 
 
 
