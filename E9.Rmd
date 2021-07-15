@@ -113,6 +113,51 @@ xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata agec agec_s
 ```
 
 
+Plot:
+
+```{stata}
+use "C:\Users\Matt\Documents\EPI536\Assignments\NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+# generate quintiles
+xtile age_q5=ridageyr [aweight=wtmec2yr] if subpop2==1,nq(5)
+
+# Calculates weighted mean for creating the centered age variable
+svy,subpop(subpop2): mean ridageyr
+# Creates weighted age variable
+gen agec=ridageyr-10.2
+
+# Creates higher-order age variables
+gen agec_sq=agec^2
+gen agec_cb=agec^3
+
+# Run Cubic
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata agec agec_sq agec_cb
+# Run model with age quintiles
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.age_q5
+predict pred_wc2_q5,xb
+predict pred_wc2_se_q5,stdp
+gen pred_wc2_ub_q5=pred_wc2_q5 + 1.96*pred_wc2_se_q5
+gen pred_wc2_lb_q5=pred_wc2_q5 - 1.96*pred_wc2_se_q5
+
+*Run model with linear age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata ridageyr
+predict pred_wc2_x,xb
+*Run model with quadratic age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata agec agec_sq
+predict pred_wc2_sq,xb
+
+twoway scatter pred_wc2_q5 ridageyr if subpop2==1 & male==1 & foodinsec==0, mcolor(blue) ///
+ 	|| scatter pred_wc2_lb_q5 ridageyr if subpop2==1 & male==1 & foodinsec==0, msymbol(smx) mcolor(blue) ///
+ 	|| scatter pred_wc2_ub_q5 ridageyr if subpop2==1 & male==1 & foodinsec==0, msymbol(smx) mcolor(blue) ///
+ 	|| scatter pred_wc2_x ridageyr if subpop2==1 & male==1 & foodinsec==0 ///
+ 	|| scatter pred_wc2_sq ridageyr if subpop2==1 & male==1 & foodinsec==0
+
+graph export age_plot.svg, replace
+```
+
+<embed src="age_plot.svg" type="image/svg+xml" />
+
 # Bonus
 
 ## Lowess
