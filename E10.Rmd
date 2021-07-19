@@ -1,0 +1,245 @@
+---
+title: "Exercise 10 - EPI536-Assignments"
+author: "Matthew Hoctor"
+date: "7/117/2021"
+output:
+  html_document:
+    number_sections: no
+    theme: lumen
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(engine.path = list(
+  stata = "C:/Program Files/Stata17/StataBE-64"
+))
+```
+
+```{r libraries, include=FALSE}
+library(Statamarkdown)
+```
+
+# A: Selection
+
+Use the selection approach to identify confounders of the association between food assistance and high waist circumference among food secure boys.
+
+## 1
+
+Fit the crude model, modeling high waist circumference as a function of food assistance only.  You have used the code needed Exercise 8.  In the table below A.3, record the odds ratios (OR) for food assistance and its 95% confidence interval. Separate the confidence interval bounds with a comma. Report these measures to 2 decimal places. 
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any,or
+```
+
+## 2
+
+Fit the remaining models, modeling high waist circumference as a function of food assistance plus one potential confounder at a time as shown in the table below A.3.  Record OR for food assistance and its 95% CI from each model in rows b, c, and d. 
+
+### b: age (ridageyr)
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any ridageyr
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any ridageyr,or
+```
+
+### c: race/ethnicity (race_eth)
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.race_eth
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.race_eth,or
+```
+
+### d: health insurance (hinsur)
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.hinsur
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.hinsur,or
+```
+
+## 3
+
+Calculate the percent change in each OR from b, c, and d, compared to the OR in a.  Enter these into the last column. Report the % change in OR to 1 decimal, retaining the sign.
+
+## 4
+
+### hinsur 
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.race_eth i.hinsur
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.race_eth i.hinsur,or
+```
+
+### ridageyr
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.race_eth ridageyr
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.race_eth ridageyr,or
+```
+
+### hinsur + ridageyr
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.race_eth i.hinsur ridageyr
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any i.race_eth i.hinsur ridageyr,or
+```
+
+# B Deletion
+
+## 1 Cycle 1
+
+### Full model
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age,or
+```
+
+### Delete ridageyr
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age,or
+```
+
+
+### Delete race_eth
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any ridageyr fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any ridageyr fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age,or
+```
+
+
+### delete hinsur
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any ridageyr i.race_eth fpl_2cat pr_male i.pr_ed3 i.pr_age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any ridageyr i.race_eth fpl_2cat pr_male i.pr_ed3 i.pr_age,or
+```
+
+## 2 Deletion cycle 2&3
+
+### Base Model: Delete ridageyr
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age,or
+```
+
+### Delete hinsur (full -A1 -A2)
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any i.race_eth fpl_2cat pr_male i.pr_ed3 i.pr_age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any i.race_eth fpl_2cat pr_male i.pr_ed3 i.pr_age,or
+```
+
+### Delete race_eth
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age,or
+```
+
+### Delete ridageyr & hinsur & race_eth (full -A1 -A2 -A3)
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any fpl_2cat pr_male i.pr_ed3 i.pr_age
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata food_any fpl_2cat pr_male i.pr_ed3 i.pr_age,or
+```
+
+# C Comparison of Selection & Deletion
+
+# D Review
+
+# Bonus
+
+## Unadjusted
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any,or
+```
+
+## age (ridageyr)
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any ridageyr
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any ridageyr,or
+```
+
+## quadratic age
+
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+gen agec=ridageyr-10.2
+gen agec_sq=agec^2
+gen agec_cb=agec^3
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any agec agec_sq
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): logit wccata i.food_any agec agec_sq,or
+```
+
+
