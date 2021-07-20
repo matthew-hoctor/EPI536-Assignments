@@ -1,0 +1,183 @@
+---
+title: "Exercise 11 - EPI536-Assignments"
+author: "Matthew Hoctor"
+date: "7/20/2021"
+output:
+  html_document:
+    number_sections: no
+    theme: lumen
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(engine.path = list(
+  stata = "C:/Program Files/Stata17/StataBE-64"
+))
+```
+
+```{r libraries, include=FALSE}
+library(Statamarkdown)
+```
+
+# A: Stratified Analysis
+
+## 1 gender-food security stratified
+
+Calculate gender-food security stratified associations between food assistance and BMI z-score.  Record the coefficient, its 95% confidence interval (CI) and p-value in the table below. Enter the data to two decimal places. Place a comma between the lower and upper bounds of the 95% CI. 
+
+### a food secure girls and boys
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==0 & foodinsec==0): regress bmiz food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+```
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==0): regress bmiz food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+```
+
+### b Food insecure girls and boys
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==0 & foodinsec==1): regress bmiz food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+```
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1 & foodinsec==1): regress bmiz food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+```
+
+# B Interaction Analysis
+
+## 1 Association between food assistance and BMI
+
+Fit a model that tests for interactions between food security and food assistance, among boys.
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1): regress bmiz i.foodinsec*food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_age
+```
+
+## 2 
+
+Calculate food-security-specific associations between food assistance and BMI z-score among boys.
+
+### d among food secure
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1): regress bmiz i.foodinsec*food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_ag
+
+# Among food secure (long form)
+lincom (1*food_any + 0*_Ifoodinsec_1 + 0*_IfooXfood__1) - (0*food_any + 0*_Ifoodinsec_1 + 0*_IfooXfood__1)
+
+# Among food secure (reduced form)
+lincom food_any
+```
+
+### e among food insecure
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1 & male==1): regress bmiz i.foodinsec*food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_ag
+
+# Among food insecure (long form)
+lincom (1*food_any + 1*_Ifoodinsec_1 + 1*_IfooXfood__1) - (0*food_any + 1*_Ifoodinsec_1 + 0*_IfooXfood__1)
+
+# Among food insecure (reduced form)
+lincom food_any + _IfooXfood__1
+```
+
+# Bonus
+
+Fit a single model that includes food secure and insecure boys and girls (the full sample).  Include the full set of interaction terms.  Calculate the gender and food security specific associations from the full set of interaction terms.
+
+### among food secure girls
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1): regress bmiz i.foodinsec*food_any i.foodinsec*i.male i.male*food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_ag
+
+# Among food secure (long form)
+lincom (1*food_any + 0*_Ifoodinsec_1 + 0*_Imale_1 + 0*_IfooXfood__1 + 0*_ImalXfood__1 + 0*_IfooXmal_1_1) - (0*food_any + 0*_Ifoodinsec_1 + 0*_Imale_1 + 0*_IfooXfood__1 + 0*_ImalXfood__1 + 0*_IfooXmal_1_1)
+
+# Among food secure (reduced form)
+lincom food_any
+```
+
+### among food insecure girls
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1): regress bmiz i.foodinsec*food_any i.foodinsec*i.male i.male*food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_ag
+
+# Among food secure (long form)
+lincom (1*food_any + 1*_Ifoodinsec_1 + 0*_Imale_1 + 1*_IfooXfood__1 + 0*_ImalXfood__1 + 0*_IfooXmal_1_1) - (0*food_any + 1*_Ifoodinsec_1 + 0*_Imale_1 + 0*_IfooXfood__1 + 0*_ImalXfood__1 + 0*_IfooXmal_1_1)
+
+# Among food secure (reduced form)
+lincom food_any + _IfooXfood__1
+```
+
+### among food secure boys
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1): regress bmiz i.foodinsec*food_any i.foodinsec*i.male i.male*food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_ag
+
+# Among food secure (long form)
+lincom (1*food_any + 0*_Ifoodinsec_1 + 1*_Imale_1 + 0*_IfooXfood__1 + 1*_ImalXfood__1 + 0*_IfooXmal_1_1) - (0*food_any + 0*_Ifoodinsec_1 + 1*_Imale_1 + 0*_IfooXfood__1 + 0*_ImalXfood__1 + 0*_IfooXmal_1_1)
+
+# Among food secure (reduced form)
+lincom food_any + _ImalXfood__1
+```
+
+
+### among food insecure boys
+
+```{stata}
+use "NHANES0708_all.dta"
+svyset sdmvpsu [pw=wtmec2yr], strata(sdmvstra)
+
+xi: svy,subpop(if subpop2==1): regress bmiz i.foodinsec*food_any i.foodinsec*i.male i.male*food_any ridageyr i.race_eth fpl_2cat i.hinsur pr_male i.pr_ed3 i.pr_ag
+
+# Among food secure (long form)
+lincom (1*food_any + 1*_Ifoodinsec_1 + 1*_Imale_1 + 1*_IfooXfood__1 + 1*_ImalXfood__1 + 1*_IfooXmal_1_1) - (0*food_any + 1*_Ifoodinsec_1 + 1*_Imale_1 + 0*_IfooXfood__1 + 0*_ImalXfood__1 + 1*_IfooXmal_1_1)
+
+# Among food secure (reduced form)
+lincom food_any + _IfooXfood__1 + _ImalXfood__1
+```
+
+
+
+
+
